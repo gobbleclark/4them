@@ -1,12 +1,14 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 import {Header, Container } from 'semantic-ui-react'
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 
 const Home = () => {
-  
+  const [link, setLink] = useState("")
   const openLink = (x) => {
     window.open(x, "_blank")
   }
@@ -36,15 +38,10 @@ polygonSeries.exclude = ["AQ"];
 // Add line bullets
 let cities = chart.series.push(new am4maps.MapImageSeries());
 cities.mapImages.template.nonScaling = true;
-cities.mapImages.template.events.on("hit", function(ev) {
-  chart.closeAllPopups();
-  chart.openPopup( 
-    `
-    <div> 
-    <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@4themessential/video/6929876641837632774" data-video-id="6929876641837632774" style="max-width: 605px;min-width: 325px;" > <section> <a target="_blank" title="@4themessential" href="https://www.tiktok.com/@4themessential">@4themessential</a> <p>Got the cool opportunity to help a Colombian orphanage out! <a title="4themessential" target="_blank" href="https://www.tiktok.com/tag/4themessential">#4themessential</a></p> <a target="_blank" title="♬ So Fine - Trees and Lucy" href="https://www.tiktok.com/music/So-Fine-6817608289770014722">♬ So Fine - Trees and Lucy</a> </section> </blockquote> <script async src="https://www.tiktok.com/embed.js"></script>
-    </div>
-`, "4 Them Essential");
-});
+// cities.mapImages.template.events.on("hit", function(ev) {
+//   chart.closeAllPopups();
+//   chart.openPopup(city.url);
+// });
 let city = cities.mapImages.template.createChild(am4core.Circle);
 city.radius = 6;
 city.fill = "#fe6f5e"
@@ -58,13 +55,17 @@ function addCity(coords, url, title,) {
     city.latitude = coords.latitude;
     city.longitude = coords.longitude;
     city.tooltipText = title;
+    city.url = url
+    city.urlTarget = "_blank"
     return city;
 }
 
 
 
-let medallin = addCity({ "latitude": 6.248220, "longitude": -75.580030,  }, "google.com", "Medallin, Colombia", );
-let saltLakeCity = addCity({"latitude": 40.760780, "longitude":-111.891045}, "Salt Lake City, USA",)
+let medallin = addCity({ "latitude": 6.248220, "longitude": -75.580030,  }, "https://www.tiktok.com/@4themessential/video/6929876641837632774?sender_device=pc&sender_web_id=6930670553335023110&is_from_webapp=v2&is_copy_url=0", "Helping colombian orphans with their education.", );
+let medallin_2 = addCity({ "latitude": 6.9, "longitude": -75.580030,  }, "https://www.tiktok.com/@4themessential/video/6931009268623658245?sender_device=pc&sender_web_id=6930670553335023110&is_from_webapp=v2&is_copy_url=0", "Celebrating birthdays together!", );
+let medallin_3 = addCity({ "latitude": 6, "longitude": -75.580030,  }, "https://www.tiktok.com/@4themessential/video/6932497652911279366?sender_device=pc&sender_web_id=6930670553335023110&is_from_webapp=v2&is_copy_url=0", "The orphanage was almost out of food.", );
+let saltLakeCity = addCity({"latitude": 40.760780, "longitude":-111.891045}, "google.com", "USA",)
 // Add lines
 let lineSeries = chart.series.push(new am4maps.MapArcSeries());
 lineSeries.mapLines.template.line.strokeWidth = 2;
@@ -92,6 +93,8 @@ function addLine(from, to) {
 }
 
 addLine(saltLakeCity, medallin);
+addLine(saltLakeCity, medallin_2);
+addLine(saltLakeCity, medallin_3);
 
 
 // Add plane
