@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   #   resources :users do
   #     resources :events
     # end
+    get '*other', to: 'static#index'
 end
