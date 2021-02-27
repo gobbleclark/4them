@@ -40,8 +40,9 @@ cities.mapImages.template.events.on("hit", function(ev) {
   chart.closeAllPopups();
   chart.openPopup( 
     `
+    <div> 
     <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@4themessential/video/6929876641837632774" data-video-id="6929876641837632774" style="max-width: 605px;min-width: 325px;" > <section> <a target="_blank" title="@4themessential" href="https://www.tiktok.com/@4themessential">@4themessential</a> <p>Got the cool opportunity to help a Colombian orphanage out! <a title="4themessential" target="_blank" href="https://www.tiktok.com/tag/4themessential">#4themessential</a></p> <a target="_blank" title="♬ So Fine - Trees and Lucy" href="https://www.tiktok.com/music/So-Fine-6817608289770014722">♬ So Fine - Trees and Lucy</a> </section> </blockquote> <script async src="https://www.tiktok.com/embed.js"></script>
-    
+    </div>
 `, "4 Them Essential");
 });
 let city = cities.mapImages.template.createChild(am4core.Circle);
