@@ -1,220 +1,42 @@
 import React, {useEffect, useState} from 'react';
-import * as am4core from "@amcharts/amcharts4/core";
-import * as am4maps from "@amcharts/amcharts4/maps";
-import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 import {Header, Container } from 'semantic-ui-react'
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
-
-
+import Globe from 'react-globe.gl';
 const Home = () => {
-  const [link, setLink] = useState("")
-  const openLink = (x) => {
-    window.open(x, "_blank")
-  }
-
+  
+  const [mapData, setMapData] =  useState([])
   
   useEffect(() => {
-    // Create map instance
-let chart = am4core.create("chartdiv", am4maps.MapChart);
-chart.geodata = am4geodata_worldLow;
-chart.projection = new am4maps.projections.Miller();
-chart.homeZoomLevel = 0;
-// chart.homeGeoPoint = {
-//     latitude: 38,
-//     longitude: -60
-// };
 
+    setMapData(data)
+    console.log(data)
+  }, [])
 
-
-// Create map polygon series
-let polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
-polygonSeries.useGeodata = true;
-polygonSeries.mapPolygons.template.fill = "#36454f"
-chart.background.fill = "#e52b50"
-polygonSeries.mapPolygons.template.nonScalingStroke = true;
-polygonSeries.exclude = ["AQ"];
-
-// Add line bullets
-let cities = chart.series.push(new am4maps.MapImageSeries());
-cities.mapImages.template.nonScaling = true;
-// cities.mapImages.template.events.on("hit", function(ev) {
-//   chart.closeAllPopups();
-//   chart.openPopup(city.url);
-// });
-let city = cities.mapImages.template.createChild(am4core.Circle);
-city.radius = 6;
-city.fill = "#fe6f5e"
-city.strokeWidth = 2;
-city.stroke = am4core.color("#fff");
-
-
-
-function addCity(coords, url, title,) {
-    let city = cities.mapImages.create();
-    city.latitude = coords.latitude;
-    city.longitude = coords.longitude;
-    city.tooltipText = title;
-    city.url = url
-    city.urlTarget = "_blank"
-    return city;
-}
-
-
-
-let medallin = addCity({ "latitude": 6.248220, "longitude": -75.580030,  }, "https://www.tiktok.com/@4themessential/video/6929876641837632774?sender_device=pc&sender_web_id=6930670553335023110&is_from_webapp=v2&is_copy_url=0", "Helping colombian orphans with their education.", );
-let medallin_2 = addCity({ "latitude": 6.9, "longitude": -75.580030,  }, "https://www.tiktok.com/@4themessential/video/6931009268623658245?sender_device=pc&sender_web_id=6930670553335023110&is_from_webapp=v2&is_copy_url=0", "Celebrating birthdays together!", );
-let medallin_3 = addCity({ "latitude": 6, "longitude": -75.580030,  }, "https://www.tiktok.com/@4themessential/video/6932497652911279366?sender_device=pc&sender_web_id=6930670553335023110&is_from_webapp=v2&is_copy_url=0", "The orphanage was almost out of food.", );
-let saltLakeCity = addCity({"latitude": 40.760780, "longitude":-111.891045}, "google.com", "USA",)
-// Add lines
-let lineSeries = chart.series.push(new am4maps.MapArcSeries());
-lineSeries.mapLines.template.line.strokeWidth = 2;
-lineSeries.mapLines.template.line.strokeOpacity = 0.5;
-lineSeries.mapLines.template.line.stroke = city.fill;
-lineSeries.mapLines.template.line.nonScalingStroke = true;
-lineSeries.mapLines.template.line.strokeDasharray = "1,1";
-lineSeries.zIndex = 10;
-
-let shadowLineSeries = chart.series.push(new am4maps.MapLineSeries());
-shadowLineSeries.mapLines.template.line.strokeOpacity = 0;
-shadowLineSeries.mapLines.template.line.nonScalingStroke = true;
-shadowLineSeries.mapLines.template.shortestDistance = false;
-shadowLineSeries.zIndex = 5;
-
-function addLine(from, to) {
-    let line = lineSeries.mapLines.create();
-    line.imagesToConnect = [from, to];
-    line.line.controlPointDistance = -0.3;
-
-    let shadowLine = shadowLineSeries.mapLines.create();
-    shadowLine.imagesToConnect = [from, to];
-
-    return line;
-}
-
-addLine(saltLakeCity, medallin);
-addLine(saltLakeCity, medallin_2);
-addLine(saltLakeCity, medallin_3);
-
-
-// Add plane
-let plane = lineSeries.mapLines.getIndex(0).lineObjects.create();
-plane.position = 0;
-plane.width = 48;
-plane.height = 48;
-
-plane.adapter.add("scale", function(scale, target) {
-    return 0.5 * (1 - (Math.abs(0.5 - target.position)));
-})
-
-let planeImage = plane.createChild(am4core.Sprite);
-planeImage.scale = 0.08;
-planeImage.horizontalCenter = "middle";
-planeImage.verticalCenter = "middle";
-planeImage.path = "m2,106h28l24,30h72l-44,-133h35l80,132h98c21,0 21,34 0,34l-98,0 -80,134h-35l43,-133h-71l-24,30h-28l15,-47";
-planeImage.fill = "#fe6f5e"
-planeImage.strokeOpacity = 0;
-
-let shadowPlane = shadowLineSeries.mapLines.getIndex(0).lineObjects.create();
-shadowPlane.position = 0;
-shadowPlane.width = 48;
-shadowPlane.height = 48;
-
-let shadowPlaneImage = shadowPlane.createChild(am4core.Sprite);
-shadowPlaneImage.scale = 0.05;
-shadowPlaneImage.horizontalCenter = "middle";
-shadowPlaneImage.verticalCenter = "middle";
-shadowPlaneImage.path = "m2,106h28l24,30h72l-44,-133h35l80,132h98c21,0 21,34 0,34l-98,0 -80,134h-35l43,-133h-71l-24,30h-28l15,-47";
-shadowPlaneImage.fill = am4core.color("#000");
-shadowPlaneImage.strokeOpacity = 0;
-
-shadowPlane.adapter.add("scale", function(scale, target) {
-    target.opacity = (0.6 - (Math.abs(0.5 - target.position)));
-    return 0.5 - 0.3 * (1 - (Math.abs(0.5 - target.position)));
-})
-
-// Plane animation
-let currentLine = 0;
-let direction = 1;
-function flyPlane() {
-
-    // Get current line to attach plane to
-    plane.mapLine = lineSeries.mapLines.getIndex(currentLine);
-    plane.parent = lineSeries;
-    shadowPlane.mapLine = shadowLineSeries.mapLines.getIndex(currentLine);
-    shadowPlane.parent = shadowLineSeries;
-    shadowPlaneImage.rotation = planeImage.rotation;
-
-    // Set up animation
-    let from, to;
-    let numLines = lineSeries.mapLines.length;
-    if (direction == 1) {
-        from = 0
-        to = 1;
-        if (planeImage.rotation != 0) {
-            planeImage.animate({ to: 0, property: "rotation" }, 1000).events.on("animationended", flyPlane);
-            return;
-        }
-    }
-    else {
-        from = 1;
-        to = 0;
-        if (planeImage.rotation != 180) {
-            planeImage.animate({ to: 180, property: "rotation" }, 1000).events.on("animationended", flyPlane);
-            return;
-        }
-    }
-
-    // Start the animation
-    let animation = plane.animate({
-        from: from,
-        to: to,
-        property: "position"
-    }, 5000, am4core.ease.sinInOut);
-    animation.events.on("animationended", flyPlane)
-    /*animation.events.on("animationprogress", function(ev) {
-      let progress = Math.abs(ev.progress - 0.5);
-      //console.log(progress);
-      //planeImage.scale += 0.2;
-    });*/
-
-    shadowPlane.animate({
-        from: from,
-        to: to,
-        property: "position"
-    }, 5000, am4core.ease.sinInOut);
-
-    // Increment line, or reverse the direction
-    currentLine += direction;
-    if (currentLine < 0) {
-        currentLine = 0;
-        direction = 1;
-    }
-    else if ((currentLine + 1) > numLines) {
-        currentLine = numLines - 1;
-        direction = -1;
-    }
-
-}
-
-// Go!
-flyPlane();
-
-},[])
-
-  return (
-    <Container style={{width: window.innerWidth, height: window.innerHeight}}>
-      <div>
-        <Header style={{textAlign: 'center', fontSize: '40px',  paddingTop: '55px'}}> 4 Them Essential</Header>
-      </div>
-      <div>
-        <Header style={{textAlign: 'center', fontSize: '20px' }}> Because of your support, we have been able to economically help those most in need.</Header>
-      </div>
-      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', verticalAlign: 'center', }} id={`chartdiv`}></div>
-    </Container>
-
-  )
   
+  const data = [{
+    name: "Test",
+    lat: '40.7607793',
+    lng: '-111.8910',
+    color: "#FF0000",
+    size: '.5',
+  }
+  ]
+  return (
+    <>
+      <div style={{display: 'flex', justifyContent: 'center'}}>
+        <Globe
+            globeImageUrl = 'https://unpkg.com/three-globe@2.18.0/example/img/earth-blue-marble.jpg'
+            backgroundColor = 'black'
+            // backgroundImageUrl = 'https://wallpaperaccess.com/full/202197.jpg'
+            showAtmosphere
+            atmosphereColor = 'white'
+            atmosphereAltitude = {1.5}
+            pointsData = {mapData}
+            pointAltitude="size"
+            pointColor="color"
+         />
+      </div>
+    </>
+  )
 };
 
 export default Home;
