@@ -11,7 +11,7 @@ import { Container, } from "semantic-ui-react";
 
 const App = () => (
   <>
-    <Navbar />
+    {/* <Navbar />  */}
     <FetchUser>
       <Container>
         <Switch>
