@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Header, Container } from 'semantic-ui-react'
+import {Header, Container, Responsive } from 'semantic-ui-react'
 import Globe from 'react-globe.gl';
 const Home = () => {
   
@@ -45,11 +45,12 @@ const shrinkMapMarkers = () => {
 
   return (
     <>
+    {/* <Responsive {...Responsive.onlyComputer}> */}
       <div style={{
                 display: 'flex', 
                 justifyContent: 'center',
-                // width: window.innerWidth,
-                height: window.innerHeight
+                width: window.screen.wdith,
+                height: window.screen.height
                 }}>
         <Globe
           // globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
@@ -73,6 +74,14 @@ const shrinkMapMarkers = () => {
             onZoom={() => shrinkMapMarkers}
          />
       </div>
+      {/* </Responsive> */}
+
+      {/* <Responsive {...Responsive.onlyMobile}>
+          <
+
+      </Responsive> */}
+
+
     </>
   )
 };
